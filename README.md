@@ -4,4 +4,6 @@ Cobaltstrike4.1 Source
 
 这是魔改Cobaltstrike4.1系列的帖子，若有错误请指出，谢谢：
 
-https://www.52pojie.cn/forum.php?mod=viewthread&tid=1371712&page=1&extra=#pid36925998
+https://www.52pojie.cn/thread-1371712-1-1.html
+https://www.52pojie.cn/thread-1396671-1-1.html
+https://www.52pojie.cn/thread-1334525-1-1.html
