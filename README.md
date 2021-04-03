@@ -9,3 +9,7 @@ https://www.52pojie.cn/thread-1371712-1-1.html
 https://www.52pojie.cn/thread-1396671-1-1.html
 
 https://www.52pojie.cn/thread-1334525-1-1.html
+
+https://www.52pojie.cn/thread-1396671-1-1.html
+
+https://www.52pojie.cn/thread-1401826-1-1.html
