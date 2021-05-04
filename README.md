@@ -4,15 +4,15 @@ Cobaltstrike4.1 Source
 
 这是魔改Cobaltstrike4.1系列的帖子，若有错误请指出，谢谢：
 
-https://www.52pojie.cn/thread-1371712-1-1.html
+魔改CobaltStrike：二开及后门生成分析：https://www.52pojie.cn/thread-1371712-1-1.html
 
-https://www.52pojie.cn/thread-1396671-1-1.html
+魔改CobaltStrike：免杀就像便秘一样：https://www.52pojie.cn/thread-1396671-1-1.html
 
-https://www.52pojie.cn/thread-1334525-1-1.html
+CobaltStrike4.0 远控stage分析:https://www.52pojie.cn/thread-1334525-1-1.html
 
-https://www.52pojie.cn/thread-1426936-1-1.html
+魔改CobaltStrike：协议全剖析：https://www.52pojie.cn/thread-1426936-1-1.html
 
-https://www.52pojie.cn/thread-1401826-1-1.html
+魔改CobaltStrike:上线就跟回家一样：https://www.52pojie.cn/thread-1401826-1-1.html
 
 
 teamserver端的调试配置看图片，其中地址和端口根据实际填写。
