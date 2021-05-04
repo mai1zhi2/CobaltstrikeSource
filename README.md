@@ -10,6 +10,11 @@ https://www.52pojie.cn/thread-1396671-1-1.html
 
 https://www.52pojie.cn/thread-1334525-1-1.html
 
-https://www.52pojie.cn/thread-1396671-1-1.html
+https://www.52pojie.cn/thread-1426936-1-1.html
 
 https://www.52pojie.cn/thread-1401826-1-1.html
+
+
+teamserver端的调试配置看图片，其中地址和端口根据实际填写。
+详细参数如下，-Djavax.net.ssl.keyStore的目录根据实际的填写：
+-XX:ParallelGCThreads=4 -Xms512m -Xmx1024m -Dcobaltstrike.server_port=50050 -Djavax.net.ssl.keyStore=C:/Users/kent/Downloads/CobaltStrike/cobaltstrike.store -Djavax.net.ssl.keyStorePassword=123456 -server -XX:+AggressiveHeap -XX:+UseParallelGC
