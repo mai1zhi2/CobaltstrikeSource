@@ -15,6 +15,9 @@ CobaltStrike4.0 远控stage分析:https://www.52pojie.cn/thread-1334525-1-1.html
 魔改CobaltStrike:上线就跟回家一样：https://www.52pojie.cn/thread-1401826-1-1.html
 
 
-teamserver端的调试配置看图片，其中地址和端口根据实际填写。
-详细参数如下，-Djavax.net.ssl.keyStore的目录根据实际的填写：
+teamserver端的调试配置看图片，其中地址和端口需要根据实际填写。
+
+详细参数如下：
 -XX:ParallelGCThreads=4 -Xms512m -Xmx1024m -Dcobaltstrike.server_port=50050 -Djavax.net.ssl.keyStore=C:/Users/kent/Downloads/CobaltStrike/cobaltstrike.store -Djavax.net.ssl.keyStorePassword=123456 -server -XX:+AggressiveHeap -XX:+UseParallelGC
+
+其中-Djavax.net.ssl.keyStore对应的目录根据实际的填写
