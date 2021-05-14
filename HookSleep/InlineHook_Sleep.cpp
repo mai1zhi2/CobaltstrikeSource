@@ -4,20 +4,20 @@
 #include <CONIO.H>
 #include <Windows.h>
 
-//¶¨ÒåÈçÏÂ½á¹¹£¬±£´æÒ»´ÎInlineHookËùĞèÒªµÄĞÅÏ¢
+//å®šä¹‰å¦‚ä¸‹ç»“æ„ï¼Œä¿å­˜ä¸€æ¬¡InlineHookæ‰€éœ€è¦çš„ä¿¡æ¯
 typedef struct _HOOK_DATA {
-	char szApiName[128];	//´ıHookµÄAPIÃû×Ö
-	char szModuleName[64];	//´ıHookµÄAPIËùÊôÄ£¿éµÄÃû×Ö
-	int  HookCodeLen;		//Hook³¤¶È
-	BYTE oldEntry[16];		//±£´æHookÎ»ÖÃµÄÔ­Ê¼Ö¸Áî
-	BYTE newEntry[16];		//±£´æÒªĞ´ÈëHookÎ»ÖÃµÄĞÂÖ¸Áî
-	ULONG_PTR HookPoint;		//´ıHOOKµÄÎ»ÖÃ
-	ULONG_PTR JmpBackAddr;		//»ØÌøµ½Ô­º¯ÊıÖĞµÄÎ»ÖÃ
-	ULONG_PTR pfnTrampolineFun;	//µ÷ÓÃÔ­Ê¼º¯ÊıµÄÍ¨µÀ
-	ULONG_PTR pfnDetourFun;		//HOOK¹ıÂËº¯Êı
+	char szApiName[128];	//å¾…Hookçš„APIåå­—
+	char szModuleName[64];	//å¾…Hookçš„APIæ‰€å±æ¨¡å—çš„åå­—
+	int  HookCodeLen;		//Hooké•¿åº¦
+	BYTE oldEntry[16];		//ä¿å­˜Hookä½ç½®çš„åŸå§‹æŒ‡ä»¤
+	BYTE newEntry[16];		//ä¿å­˜è¦å†™å…¥Hookä½ç½®çš„æ–°æŒ‡ä»¤
+	ULONG_PTR HookPoint;		//å¾…HOOKçš„ä½ç½®
+	ULONG_PTR JmpBackAddr;		//å›è·³åˆ°åŸå‡½æ•°ä¸­çš„ä½ç½®
+	ULONG_PTR pfnTrampolineFun;	//è°ƒç”¨åŸå§‹å‡½æ•°çš„é€šé“
+	ULONG_PTR pfnDetourFun;		//HOOKè¿‡æ»¤å‡½æ•°
 }HOOK_DATA, * PHOOK_DATA;
 
-#define HOOKLEN (5)	//Òª¸ÄĞ´µÄÖ¸ÁîµÄ³¤¶È
+#define HOOKLEN (5)	//è¦æ”¹å†™çš„æŒ‡ä»¤çš„é•¿åº¦
 HOOK_DATA SleepHookData;
 
 ULONG_PTR SkipJmpAddress(ULONG_PTR uAddress);
@@ -52,7 +52,7 @@ IMAGE_NT_HEADERS* GetNtHeader(void* pFileData)
 
 
 
-//½âÎö×ÊÔ´
+//è§£æèµ„æº
 UINT FindFirstResADDR()
 {
 	UINT							FirstResAddr = NULL;
@@ -96,26 +96,26 @@ UINT FindFirstResADDR()
 			return FALSE;
 		}
 
-		//ÉèÖÃÈ¨ÏŞ
+		//è®¾ç½®æƒé™
 		g_dwSize = pResourceDir->Size;
-		pResource = (PIMAGE_RESOURCE_DIRECTORY)RVAToPtr(pResourceDir->VirtualAddress);//×ÊÔ´ÆğµãµØÖ·
+		pResource = (PIMAGE_RESOURCE_DIRECTORY)RVAToPtr(pResourceDir->VirtualAddress);//èµ„æºèµ·ç‚¹åœ°å€
 
 
 		pTypeRes = pResource;
-		nTypeNum = pTypeRes->NumberOfIdEntries + pTypeRes->NumberOfNamedEntries;//¸ÃÀàĞÍÖĞÓĞ¼¸Àà×ÊÔ´
+		nTypeNum = pTypeRes->NumberOfIdEntries + pTypeRes->NumberOfNamedEntries;//è¯¥ç±»å‹ä¸­æœ‰å‡ ç±»èµ„æº
 		pTypeEntry = (PIMAGE_RESOURCE_DIRECTORY_ENTRY)((DWORD)pTypeRes + sizeof(IMAGE_RESOURCE_DIRECTORY));
 
 		for (nTypeIndex = 0; nTypeIndex < nTypeNum; nTypeIndex++, pTypeEntry++)
 		{
-			//¸ÃÀàĞÍÄ¿Â¼µØÖ·
+			//è¯¥ç±»å‹ç›®å½•åœ°å€
 			pNameIdRes = (PIMAGE_RESOURCE_DIRECTORY)((DWORD)pResource + (DWORD)pTypeEntry->OffsetToDirectory);
-			//¸ÃÀàĞÍÖĞÓĞ¼¸¸öÏîÄ¿
+			//è¯¥ç±»å‹ä¸­æœ‰å‡ ä¸ªé¡¹ç›®
 			nNameIdNum = pNameIdRes->NumberOfIdEntries + pNameIdRes->NumberOfNamedEntries;
 			pNameIdEntry = (PIMAGE_RESOURCE_DIRECTORY_ENTRY)((DWORD)pNameIdRes + sizeof(IMAGE_RESOURCE_DIRECTORY));
 
 			for (nNameIdIndex = 0; nNameIdIndex < nNameIdNum; nNameIdIndex++, pNameIdEntry++)
 			{
-				//¸ÃÏîÄ¿Ä¿Â¼µØÖ·
+				//è¯¥é¡¹ç›®ç›®å½•åœ°å€
 				pLanguageRes = (PIMAGE_RESOURCE_DIRECTORY)((DWORD)pResource + (DWORD)pNameIdEntry->OffsetToDirectory);
 				nLanguageNum = pLanguageRes->NumberOfIdEntries + pLanguageRes->NumberOfNamedEntries;
 				pLanguageEntry = (PIMAGE_RESOURCE_DIRECTORY_ENTRY)((DWORD)pLanguageRes + sizeof(IMAGE_RESOURCE_DIRECTORY));
@@ -170,26 +170,26 @@ int main(int argc, char* argv[])
 
 int WINAPI My_Sleep(DWORD dwMilliseconds)
 {
-	//ÔÚÕâÀï£¬Äã¿ÉÒÔ¶ÔÔ­Ê¼²ÎÊı½øĞĞÈÎÒâ²Ù×÷
+	//åœ¨è¿™é‡Œï¼Œä½ å¯ä»¥å¯¹åŸå§‹å‚æ•°è¿›è¡Œä»»æ„æ“ä½œ
 	int ret;
 
-	printf("ÓĞÈËµ÷ÓÃSleep!\n");
-	//ÔÚµ÷ÓÃÔ­º¯ÊıÖ®Ç°£¬¿ÉÒÔ¶ÔIN(ÊäÈëÀà)²ÎÊı½øĞĞ¸ÉÉæ
+	printf("æœ‰äººè°ƒç”¨Sleep!\n");
+	//åœ¨è°ƒç”¨åŸå‡½æ•°ä¹‹å‰ï¼Œå¯ä»¥å¯¹IN(è¾“å…¥ç±»)å‚æ•°è¿›è¡Œå¹²æ¶‰
 
-	OriginalMessageBox(dwMilliseconds);//µ÷ÓÃÔ­MessageBox£¬²¢±£´æ·µ»ØÖµ
-	//µ÷ÓÃÔ­º¯ÊıÖ®ºó£¬¿ÉÒÔ¼ÌĞø¶ÔOUT(Êä³öÀà)²ÎÊı½øĞĞ¸ÉÉæ,±ÈÈçÍøÂçº¯ÊıµÄrecv£¬¿ÉÒÔ¸ÉÉæ·µ»ØµÄÄÚÈİ
-	return 1;//ÕâÀïÄã»¹¿ÉÒÔ¸ÉÉæÔ­Ê¼º¯ÊıµÄ·µ»ØÖµ
+	OriginalMessageBox(dwMilliseconds);//è°ƒç”¨åŸMessageBoxï¼Œå¹¶ä¿å­˜è¿”å›å€¼
+	//è°ƒç”¨åŸå‡½æ•°ä¹‹åï¼Œå¯ä»¥ç»§ç»­å¯¹OUT(è¾“å‡ºç±»)å‚æ•°è¿›è¡Œå¹²æ¶‰,æ¯”å¦‚ç½‘ç»œå‡½æ•°çš„recvï¼Œå¯ä»¥å¹²æ¶‰è¿”å›çš„å†…å®¹
+	return 1;//è¿™é‡Œä½ è¿˜å¯ä»¥å¹²æ¶‰åŸå§‹å‡½æ•°çš„è¿”å›å€¼
 }
 
 BOOL Inline_InstallHook()
 {
-	//×¼±¸Hook
+	//å‡†å¤‡Hook
 	ZeroMemory(&SleepHookData, sizeof(HOOK_DATA));
 	strcpy_s(SleepHookData.szApiName, "Sleep");
 	strcpy_s(SleepHookData.szModuleName, "Kernel32.dll");
 	SleepHookData.HookCodeLen = 5;
-	SleepHookData.HookPoint = (ULONG_PTR)GetAddress(SleepHookData.szModuleName, SleepHookData.szApiName);//HOOKµÄµØÖ·
-	SleepHookData.pfnTrampolineFun = (ULONG_PTR)OriginalMessageBox;//µ÷ÓÃÔ­Ê¼º¯ÊıµÄÍ¨µÀ
+	SleepHookData.HookPoint = (ULONG_PTR)GetAddress(SleepHookData.szModuleName, SleepHookData.szApiName);//HOOKçš„åœ°å€
+	SleepHookData.pfnTrampolineFun = (ULONG_PTR)OriginalMessageBox;//è°ƒç”¨åŸå§‹å‡½æ•°çš„é€šé“
 	SleepHookData.pfnDetourFun = (ULONG_PTR)My_Sleep;//Fake
 
 	return InstallCodeHook(&SleepHookData);
@@ -201,27 +201,27 @@ BOOL Inline_UnInstallHook()
 	return UninstallCodeHook(&SleepHookData);
 }
 /*
-MessageBoxAµÄ´úÂë¿ªÍ·:
+MessageBoxAçš„ä»£ç å¼€å¤´:
 77D5050B >  8BFF                   mov edi,edi
 77D5050D    55                     push ebp
 77D5050E    8BEC                   mov ebp,esp
 77D50510    833D 1C04D777 00       cmp dword ptr ds:[gfEMIEnable],0
 */
-//µ±ĞèÒªµ÷ÓÃÔ­Ê¼µÄMessageBoxÊ±£¬Ö±½Óµ÷ÓÃ´Ëº¯Êı¼´¿É£¬²ÎÊıÍêÈ«ÏàÍ¬
+//å½“éœ€è¦è°ƒç”¨åŸå§‹çš„MessageBoxæ—¶ï¼Œç›´æ¥è°ƒç”¨æ­¤å‡½æ•°å³å¯ï¼Œå‚æ•°å®Œå…¨ç›¸åŒ
 __declspec(naked)
 int WINAPI OriginalMessageBox(DWORD dwMilliseconds)
 {
 	_asm
 	{
-		//ÓÉÓÚÎÒÃÇĞ´ÈëµÄJmpÖ¸ÁîÆÆ»µÁËÔ­À´µÄÇ°3ÌõÖ¸Áî,Òò´ËÔÚÕâÀïÖ´ĞĞÔ­º¯ÊıµÄÇ°3ÌõÖ¸Áî
-		mov edi, edi  //ÕâÒ»¾äÆäÊµ¿ÉÒÔ²»Òª
+		//ç”±äºæˆ‘ä»¬å†™å…¥çš„JmpæŒ‡ä»¤ç ´åäº†åŸæ¥çš„å‰3æ¡æŒ‡ä»¤,å› æ­¤åœ¨è¿™é‡Œæ‰§è¡ŒåŸå‡½æ•°çš„å‰3æ¡æŒ‡ä»¤
+		mov edi, edi  //è¿™ä¸€å¥å…¶å®å¯ä»¥ä¸è¦
 		push ebp
 		mov ebp, esp
-		jmp SleepHookData.JmpBackAddr //Ìøµ½Hook´úÂëÖ®ºóµÄµØ·½£¬ÈÆ¹ı×Ô¼º°²×°µÄHOOK
+		jmp SleepHookData.JmpBackAddr //è·³åˆ°Hookä»£ç ä¹‹åçš„åœ°æ–¹ï¼Œç»•è¿‡è‡ªå·±å®‰è£…çš„HOOK
 	}
 }
 
-//»ñÈ¡Ö¸¶¨Ä£¿éÖĞÖ¸¶¨APIµÄµØÖ·
+//è·å–æŒ‡å®šæ¨¡å—ä¸­æŒ‡å®šAPIçš„åœ°å€
 LPVOID GetAddress(char* dllname, char* funname)
 {
 	HMODULE hMod = 0;
@@ -247,8 +247,8 @@ void InitHookEntry(PHOOK_DATA pHookData)
 	}
 
 	pHookData->newEntry[0] = 0xE9; //Jmp 
-	//¼ÆËãÌø×ªÆ«ÒÆ²¢Ğ´Èë
-	*(ULONG*)(pHookData->newEntry + 1) = (ULONG)pHookData->pfnDetourFun - (ULONG)pHookData->HookPoint - 5;//0xE9 Ê½jmpµÄ¼ÆËã
+	//è®¡ç®—è·³è½¬åç§»å¹¶å†™å…¥
+	*(ULONG*)(pHookData->newEntry + 1) = (ULONG)pHookData->pfnDetourFun - (ULONG)pHookData->HookPoint - 5;//0xE9 å¼jmpçš„è®¡ç®—
 
 
 }
@@ -295,7 +295,7 @@ BOOL InstallCodeHook(PHOOK_DATA pHookData)
 	printf("pHookData->pfnTrampolineFun %p\n", pHookData->pfnTrampolineFun);
 
 	printf("pHookData->HookPoint %p\n", pHookData->HookPoint);
-	pHookData->HookPoint = SkipJmpAddress(pHookData->HookPoint); //Èç¹ûº¯Êı¿ªÍ·ÊÇÌø×ª£¬ÄÇÃ´½«ÆäÌø¹ı
+	pHookData->HookPoint = SkipJmpAddress(pHookData->HookPoint); //å¦‚æœå‡½æ•°å¼€å¤´æ˜¯è·³è½¬ï¼Œé‚£ä¹ˆå°†å…¶è·³è¿‡
 	printf("pHookData->HookPoint %p\n", pHookData->HookPoint);
 
 	DWORD tmp = *(PDWORD)(pHookData->HookPoint);
@@ -308,7 +308,7 @@ BOOL InstallCodeHook(PHOOK_DATA pHookData)
 
 	LPVOID OriginalAddr = (LPVOID)pHookData->HookPoint;
 	printf("Address To HOOK=0x%08X\n", OriginalAddr);
-	InitHookEntry(pHookData);//Ìî³äInline Hook´úÂë
+	InitHookEntry(pHookData);//å¡«å……Inline Hookä»£ç 
 	if (ReadProcessMemory(hProcess, OriginalAddr, pHookData->oldEntry, pHookData->HookCodeLen, &dwBytesReturned))
 	{
 		if (WriteProcessMemory(hProcess, OriginalAddr, pHookData->newEntry, pHookData->HookCodeLen, &dwBytesReturned))
@@ -319,7 +319,7 @@ BOOL InstallCodeHook(PHOOK_DATA pHookData)
 	}
 	return bResult;
 }
-//ÅĞ¶ÏÊÇ·ñĞŞ¸Ädll»¹ÊÇĞŞ¸Ä×ÔÉí£¬¸ãÇåÈı¸öµØÖ·
+//æ¢å¤ï¼Œæš‚ä¸ç”¨
 BOOL UninstallCodeHook(PHOOK_DATA HookData)
 {
 	DWORD dwBytesReturned = 0;
