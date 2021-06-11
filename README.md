@@ -16,6 +16,7 @@ CobaltStrike4.0 远控stage分析:https://www.52pojie.cn/thread-1334525-1-1.html
 
 魔改cobalstrike免杀：三板斧再锤卡巴：https://www.52pojie.cn/thread-1440700-1-1.html
 
+魔改CobaltStrike：命由己造（上）beacon浅析：https://www.52pojie.cn/thread-1447741-1-1.html
 
 teamserver端的调试配置看图片，其中地址和端口需要根据实际填写。
 
